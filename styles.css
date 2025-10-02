@@ -1,0 +1,57 @@
+body{
+    background-color: #E3D095;
+}
+
+a{color: white !important;}
+a:hover{color: #E3D095 !important;}
+a.active{color: #E3D095 !important;}
+
+#login-btn , #register-btn , #logout-btn{
+    font-weight: 600;
+    transition: all 0.5s ease;
+}
+#login-btn{
+    background-color: #0E2148;
+    border: 2px solid #E3D095;
+    color: #E3D095;
+}
+#login-btn:hover{
+    background-color: #E3D095;
+    color: #0E2148;
+}
+
+#register-btn{
+    background-color: #E3D095;
+    color: #0E2148;
+}
+#register-btn:hover{
+    background-color: rgba(227, 208, 149,80%);
+}
+
+#logout-btn{
+    background-color: #483AA0;
+    color: #E3D095;
+}
+#logout-btn:hover{
+    background-color: #7965C1;
+}
+
+.card{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.tag{
+    background-color: #E3D095; 
+    color: #0E2148; 
+    padding: 8px; 
+    font-weight: 700; 
+    font-size: 18px;
+    border: 1px solid #0E2148;
+    margin-right: 10px;
+}
+
+#alert-container{
+    position: fixed;
+    top: 10px;
+    right: 1em;
+}
