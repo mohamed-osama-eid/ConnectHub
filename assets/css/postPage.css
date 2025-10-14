@@ -1,0 +1,21 @@
+/* #logged-in-user-comment:focus{
+    border: 1px solid #0E2148;
+} */
+
+/* #loading{
+    display:flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100px; 
+    width: 100px; 
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    top:0; 
+    right: 0; 
+    border-radius: 10%;
+    margin: auto auto;
+    z-index: 999999;
+    background-color: rgb(128 128 128 / 48%);
+    color: white;
+} */

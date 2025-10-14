@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectHub</title>
+    <!-- Standard PNG favicons -->
+    <link rel="shortcut icon" href="./favicons/favicon.ico" type="image/x-icon">
+
+    <!-- PNG favicons (different sizes for compatibility) -->
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png">
+
+    <!-- For Apple devices -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png">
+
+    <!-- For Android/Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="./favicons/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./favicons/android-chrome-512x512.png">
+
+    <!-- BootStrap  -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- // BootStrap // -->
+
+    <!-- DOMPurify sanitization -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/profilePage.css">
+    <link rel="stylesheet" href="./assets/css/index.css">
+</head>
+<body>
+    <!-- =================================================== Navbar ========================================================================== -->
+        <div class="container" style="position: fixed; left: 50%; transform: translateX(-50%);top: 0; z-index: 10;">
+            <div class="d-flex justify-content-center">
+                <nav class="navbar navbar-expand-lg col-10 rounded-bottom" style="background-color: var(--main-bg-secondary-color);">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="home.html" style="font-weight:700; color:#E3D095; font-size: 24px;">ConnectHub</a>
+                        <button class="navbar-toggler shadow-none" type="button" style="background-color:#E3D095;" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" style="color:#0E2148;">
+                                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                            </svg>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item" id = 'home-section'>
+                                    <a class="nav-link"  aria-current="page" href="home.html">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                                            <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
+                                        </svg>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id = 'profile-section'>
+                                    <a class="nav-link active" onclick="showCurrentUserProfile()" style="cursor: pointer;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                        </svg>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="d-flex justify-content-end" id = 'logged-in-div'>
+                                <button class="btn rounded mx-2" data-bs-toggle="modal" data-bs-target="#loginInModal" id="login-btn">Login</button>
+                                <button class="btn rounded" data-bs-toggle="modal" data-bs-target="#registerModal" id="register-btn">Register</button>
+                            </div>
+                            <div class="d-flex justify-content-end" id = 'logged-out-div'>
+                                <div id = 'user-info' class="text-white d-flex justify-content-center align-items-center gap-2">
+                                    <span class="image-container" style="width: 45px; height: 45px;">
+                                        <img src="./assets/images/user_img.jpg " alt="" style="width: 35px; height: 35px;" id = 'user-profile-img'>
+                                    </span>
+                                    <span id = 'user-username'></span>
+                                </div>
+                                <button class="btn rounded mx-2 fw-600 d-flex align-items-center gap-2" id="logout-btn" onclick="logOutUser()">
+                                    <div class="spinner-border d-none" role="status" id = 'logout-spinner-loading'>
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    LogOut
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            
+        </div>
+    <!-- ===================================================// Navbar //========================================================================== -->
+    
+    <!-- =================================================== profile container ========================================================================== -->
+        <div class="container my-5" id = 'profile-container' style="height: 1000px;">
+            
+            <!-- profile -->
+            <div class="d-flex justify-content-center">
+                <div class="card col-10" id = 'user-card-body-info'>
+                    
+                </div>
+            </div>
+            <!--# profile #-->
+
+            <div class = 'd-flex justify-content-center text-white'>
+                <div class="col-10">
+                    <h3 class="col-10" id = 'user-post-title'></h3>
+                </div>
+            </div>
+
+            <!-- user posts -->
+            <div id = 'post-container'>
+                <div class = 'd-flex justify-content-center text-white'>
+                    <div class="col-10">
+                        <h3 class="col-10 text-center" id = 'no-posts-title'></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- ===================================================# profile container #========================================================================== -->
+
+    <!-- =================================================== Modals ========================================================================== -->
+        <!-- login modal -->
+        <div class="modal fade" id="loginInModal" tabindex="-1" aria-labelledby="loginInModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="loginInModalLabel">Login</h5>
+                <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                </button>
+                </div>
+        
+                <div class="modal-body">
+                <!-- Add needs-validation and novalidate -->
+                <form id="loginForm" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text at-sign" id="inputGroupPrepend">@</span>
+                            <input type="text" class="form-control" id="username-login-input" aria-describedby="inputGroupPrepend" required placeholder="Username">
+                            <div class="invalid-feedback">
+                            Please enter a username.
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="mb-3">
+                        <div class="input-group mb-3">
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target = "login-password-input">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-slash text-white" viewBox="0 0 16 16">
+                                    <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
+                                    <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
+                                    <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
+                                </svg>
+                            </button>
+                            <input type="password" class="form-control rounded-end" placeholder="Password" required id = 'login-password-input'>
+                            <div class="invalid-feedback">Password is required.</div>
+                        </div>
+                    </div>
+                    <p id = 'login-failed' style="margin:0; text-align: center; color:var(--color-secondary-text); font-weight: 700; display: none;"></p>
+                </form>
+                </div>
+        
+                <div class="modal-footer">
+                <button type="button" class="btn rounded close-modal" data-bs-dismiss="modal">Close</button>
+                <!-- Change to submit -->
+                <button type="submit" form="loginForm" class="btn rounded d-flex align-items-center gap-2 submit-modal" id="login-form-btn">
+                    <div class="spinner-border d-none" role="status" id = 'login-spinner-loading'>
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Login
+                    </button>
+                </div>
+            </div>
+            </div>
+        </div>      
+        <!--# login modal #-->
+
+        <!-- register modal -->
+        <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                    <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                        </svg>
+                    </button>
+                </div>
+        
+                <div class="modal-body">
+                <!-- Add needs-validation and novalidate -->
+                    <form id="registerForm" class="needs-validation" novalidate>
+                        <div class="input-group has-validation mb-3">
+                            <span class="input-group-text at-sign" id="inputGroupPrepend">@</span>
+                            <input type="text" class="form-control" id="username-register-input" aria-describedby="inputGroupPrepend" required placeholder="Username">
+                            <div class="invalid-feedback">
+                                Please enter a username.
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target = "password-register-input">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16">
+                                    <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
+                                    <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
+                                    <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
+                                </svg>
+                            </button>
+                            <input type="password" class="form-control" placeholder="Password" required id = 'password-register-input'>
+                            <div class="invalid-feedback">Password is required.</div>
+                        </div>
+
+                        <div class="input-group mb-3 has-validation">
+                            <input type="email" class="form-control" placeholder="Email" aria-label="email-span" aria-describedby="email-span" id="email-register-input" required>
+                            <span class="input-group-text" id="email-span">@example.com</span>
+                            <div class="invalid-feedback">
+                                Please enter a email.
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3 has-validation">
+                            <input type="file" class="form-control" id="upload-profile-img" accept="image/*">
+                            <div class="invalid-feedback">
+                                Please select an image for you profile.
+                            </div>
+                        </div>
+                        
+                        <div class="input-group mb-3 has-validation">
+                            <input type="text" class="form-control" id="name-register-input" placeholder="name" required>
+                            <div class="invalid-feedback">
+                                Please enter your name.
+                            </div>
+                        </div>
+                    </form>
+                    <p id = 'register-failed' style="margin:0; text-align: center; color:var(--main-bg-secondary-color); font-weight: 700; display: none;"></p>
+                </div>
+        
+                <div class="modal-footer">
+                    <button type="button" class="btn close-modal" data-bs-dismiss="modal">Close</button>
+                    <!-- Change to submit -->
+                    <button type="submit" form="registerForm" class="btn d-flex align-items-center gap-2 submit-modal" id="register-form-btn">
+                        <div class="spinner-border d-none" role="status" id = 'register-spinner-loading'>
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        Register
+                    </button>
+                </div>
+            </div>
+            </div>
+        </div>  
+        <!--# register modal #-->
+
+        <!-- post modal -->
+        <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="postModalLabel">Add new post</h5>
+                        <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                            </svg>
+                        </button>
+                    </div>
+            
+                    <div class="modal-body">
+                    <!-- Add needs-validation and novalidate -->
+                        <form id="postForm" class="needs-validation" novalidate>
+                            <input type="hidden" value="" id = 'isNew'>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="post-title">title</span>
+                                <input type="text" class="form-control" id="post-title-input" aria-describedby="post-title"  placeholder="title">
+                            </div>
+
+                            <div class="form-floating has-validation mb-3">
+                                <textarea class="form-control" placeholder="Leave a comment here" id="post-body-input" style="height: 100px" required></textarea>
+                                <label for="post-body-input">Body</label>
+                                <div class="invalid-feedback">
+                                    Please enter the body of the post.
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <input type="file" class="form-control" id="post-image-input" accept="image/*">
+                            </div>
+                        </form>
+                    </div>
+            
+                    <div class="modal-footer">
+                        <button type="button" class="btn close-modal" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" form="postForm" class="btn d-flex align-items-center gap-2 submit-modal" id="post-form-btn">
+                            <div class="spinner-border d-none" role="status" id = 'form-post-spinner-loading'>
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span id = 'btn-text'>Create</span>
+                        </button>
+                    </div>
+                    <!-- TODO: add progress bar -->
+                </div>
+            </div>
+        </div> 
+        <!--# post modal #-->
+
+        <!-- delete modal -->
+        <div class="modal fade" id="deletePostModal" tabindex="-1" aria-labelledby="deletePostModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deletePostModalLabel">Delete Post</h5>
+                        <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                            </svg>
+                        </button>
+                    </div>
+            
+                    <div class="modal-body">
+                        <p style="color: var(--color-secondary-text);">Are you Sure you want to delete your post.?</p>
+                    </div>
+            
+                    <div class="modal-footer">
+                        <button type="button" class="btn close-modal" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn d-flex align-items-center gap-2" id="delete-post-btn" onclick="deletePost()">
+                            <div class="spinner-border d-none" role="status" id = 'delete-post-spinner-loading'>
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <!--# delete modal #-->
+    <!-- ===================================================// Modals //========================================================================== -->
+
+
+    <!-- =================================================== alerts ========================================================================== -->
+        <div id = 'alert-container'></div>
+    <!-- ===================================================// alerts //========================================================================== -->
+    
+    <!-- loading main page -->
+    <div id="loading" >
+        <p class="spinner-border m-0" style="width: 70%; height: 70%;" role="status"></p></p>
+    </div>
+    <!--# loading main page #-->
+    
+    <!-- =================================================== overlay ===============================================================================-->
+    <div class="overlay" id="overlay"></div>
+    <!-- =================================================== // overlay //===============================================================================-->
+
+</body>
+<script src= './assets/js/common.js'></script>
+<script src= './assets/js/profilePage.js'></script>
+</html>

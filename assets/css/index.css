@@ -1,0 +1,369 @@
+:root{
+    --main-bg-primary-color: hsl(0, 0%, 10%);
+    --main-bg-secondary-color: hsl(0, 0%, 16%);
+    --btn-bg-primary-color : hsla(0, 0%, 0%, 0.631);
+    --btn-bg-secondary-color : hsl(0, 0%, 56%);
+    --color-primary-text : hsl(0, 0%, 98%);
+    --color-secondary-text : hsl(60, 100%, 50%);
+}
+
+body{
+    background-color: var(--main-bg-primary-color);
+    font-family: "Roboto Condensed", sans-serif;
+}
+
+#loading{
+    display:flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100px; 
+    width: 100px; 
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    top:0; 
+    right: 0; 
+    border-radius: 10%;
+    margin: auto auto;
+    z-index: 999999;
+    background-color: rgb(128 128 128 / 48%);
+    color: var(--color-primary-text);
+}
+
+a{
+    color: var(--color-primary-text) !important;
+}
+
+a:hover , a.active{
+    color: var(--color-secondary-text) !important;
+}
+
+#login-btn , #register-btn , #logout-btn , .close-modal , .submit-modal{
+    font-weight: 350;
+    transition: all 0.3s ease;
+    color: var(--color-primary-text) !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+}
+
+#login-btn , .submit-modal{ 
+    background-color: var(--btn-bg-primary-color);
+    border-color: var(--btn-bg-secondary-color) !important;
+}
+
+#login-btn:hover , .submit-modal:hover {
+    background-color: var(--btn-bg-secondary-color);
+}
+
+#register-btn , #logout-btn , .close-modal{
+    background-color: var(--btn-bg-secondary-color);
+}
+
+#register-btn:hover , #logout-btn:hover , .close-modal:hover{
+    background-color: var(--main-bg-primary-color);
+    border-color: var(--btn-bg-secondary-color) !important;
+}
+
+.modal-content{
+    background: var(--main-bg-secondary-color);
+    color : var(--color-primary-text)
+}
+
+.modal-content input , .modal-content textarea{
+    background: linear-gradient(to right ,var(--main-bg-primary-color), var(--main-bg-secondary-color)) !important;
+    border: 2px solid var(--color-primary-text) !important;
+    color: var(--color-primary-text) !important;
+}
+
+/* Chrome, Edge, Safari autofill fix */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--main-bg-primary-color) inset !important;
+    -webkit-text-fill-color: var(--color-primary-text) !important;
+    border: 2px solid var(--color-primary-text) !important;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+/* For when autofill first happens */
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--main-bg-primary-color) inset !important;
+    -webkit-text-fill-color: var(--color-primary-text) !important;
+}
+
+/* Firefox fix (it doesn’t use -webkit-autofill) */
+input:autofill {
+    background-color: var(--main-bg-primary-color) !important;
+    color: var(--color-primary-text) !important;
+}
+
+.at-sign{
+    background-color: var(--main-bg-primary-color);
+    width: 10%;
+    font-size: 18px;
+    text-align: center;
+    border: 2px solid var(--color-primary-text);
+    color: var(--color-primary-text);
+}
+
+.toggle-password{
+    border: 2px solid var(--color-primary-text);
+    color: var(--color-primary-text);
+}
+
+#email-span , #post-title{
+    background-color: var(--main-bg-primary-color);
+    color: var(--color-primary-text);
+    border: 2px solid var(--color-primary-text);
+}
+
+/* Style the button */
+input[type="file"]::file-selector-button {
+    background: var(--main-bg-primary-color);
+    color: var(--color-primary-text);
+    /* border: 2px solid var(--color-primary-text); */
+    /* border-radius: 8px; */
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.invalid-feedback{
+    color: var(--color-secondary-text) !important;
+}
+
+.close-btn{
+    color: var(--color-primary-text);
+    background-color: transparent;
+    border: 0;
+}
+
+.close-btn:hover{
+    color: var(--btn-bg-secondary-color);
+}
+
+.author-info-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.image-container{
+    background-color: var(--main-bg-primary-color);
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.image-container img{
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.author-username{
+    margin: 0 0 2px 0;
+    color: var(--btn-bg-secondary-color);
+    font-weight: 300;
+    font-size: 15px;
+    font-family: 'Avenir';
+}
+
+.author-name{
+    font-weight: 800;
+    font-family: 'Avenir';
+    font-size: 20px;
+    color: var(--color-primary-text);
+}
+
+.post-creation-time{
+    font-weight: 300;
+    font-family: 'Avenir';
+    font-size: 20px;
+    color: var(--color-secondary-text);
+}
+
+.post-card{
+    border-radius: 15px;
+}
+
+.card{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.post-img{
+    border-radius: 15px;
+    /* width: 480px; */
+    height: 500px;
+    /* background-color: red; */
+}
+
+.post-img img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+}
+
+.post-comments-number{
+    background-color: var(--color-secondary-text);
+    color: var(--main-bg-primary-color);
+}
+
+.comments-btn:hover{
+    background-color: var(--btn-bg-secondary-color) !important;
+}
+
+#logged-in-user-comment{
+    background-color: var(--main-bg-primary-color);
+    border: 0;
+    border-radius: 10px;
+}
+
+#new-comment-btn{
+    width: 40px;
+    height: 40px; 
+    background-color: transparent;
+    border: 0;
+}
+
+#new-comment-btn svg{
+    color: var(--btn-bg-secondary-color);
+}
+
+#new-comment-btn svg:hover{
+    color: var(--color-primary-text);
+}
+
+.tag{
+    background-color: var(--color-secondary-text); 
+    color: black; 
+    padding: 10px; 
+    font-weight: 500; 
+    font-size: 15px;
+    border-radius: 10px;
+    margin-left: 10px;
+}
+
+#alert-container{
+    position: fixed;
+    z-index: 10;
+    top: 10px;
+    right: 1em;
+}
+
+#add-new-post{
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+}
+
+#add-new-post-btn{
+    background-color: var(--color-secondary-text);
+}
+
+#add-new-post-btn:hover{
+    background-color: color-mix(in hsl, var(--color-secondary-text), gray 40%);
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    background: none;
+    border: none;
+    color: var(--color-primary-text);
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.dropdown-btn:hover {
+    background-color: var(--main-bg-primary-color);
+}
+
+.dropdown-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--color-primary-text);
+    border-radius: 6px;
+    min-width: 200px;
+    z-index: 1000;
+    margin-top: 4px;
+    display: none;
+}
+
+.dropdown-menu.active {
+    display: block;
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+}
+
+.dropdown-menu li {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dropdown-menu li:hover {
+    background-color: #E3D095;
+}
+
+.dropdown-menu li b {
+    font-weight: 500;
+    color: #333;
+}
+
+ul li button{
+    border: none;
+    background-color: transparent;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+}
+
+.overlay.active {
+    display: block;
+}
+
+#delete-post-btn{
+    background-color: var(--color-secondary-text);
+}
+
+#delete-post-btn:hover{
+    background-color: var(--main-bg-primary-color);
+    border: 2px solid var(--color-secondary-text);
+    color: var(--color-primary-text);
+}
+
+.user-profile-data{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
