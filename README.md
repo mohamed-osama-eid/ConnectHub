@@ -96,10 +96,14 @@ No live demo available yet.
 ## 📸 Screenshots (Coming Soon)
 
 - Home Page
-      
-- Profile Page  
+      <img width="1920" height="915" alt="homePage" src="https://github.com/user-attachments/assets/88eb67de-e965-4411-a871-4ea61c215c56" />
+- Profile Page
+      <img width="1920" height="911" alt="profilePage" src="https://github.com/user-attachments/assets/bea9e0e9-a9c1-438c-9ab0-1577c9fa48ef" />
 - Login & Register Pages
-
+      <img width="1920" height="917" alt="loginPage" src="https://github.com/user-attachments/assets/72832243-e5cb-4874-8d95-f221c6a471ac" />
+      <img width="1920" height="913" alt="registerPage" src="https://github.com/user-attachments/assets/11763e3b-8c51-48d0-846b-e674e7eff78b" />
+- post Page
+      <img width="1920" height="913" alt="postPage" src="https://github.com/user-attachments/assets/e4912230-ff63-44d2-8e9a-8c1b6a6b63cd" />
 ---
 
 ## 🤝 Acknowledgments
