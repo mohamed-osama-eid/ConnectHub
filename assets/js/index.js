@@ -39,8 +39,8 @@ async function getPosts() {
         const posts = await response.json();
         lastPage = posts.meta.last_page;
         for (let post of posts.data) {
-            console.log(post)
-            insertNewPost({direction: 'toEnd' , post: post , currentUser: currentUser , container: postsContainer});
+            // console.log(post)
+            insertNewPost({direction: 'toEnd' , post: post , currentUser: currentUser , container: postsContainer  , writeCommentHTML : true});
         }
     } catch (error) {
         console.error(error.message);

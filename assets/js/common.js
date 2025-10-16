@@ -21,7 +21,8 @@ const DOMRefs = {
     postsContainer : document.getElementById('posts-container')? document.getElementById('posts-container'): document.getElementById('post-container'),
     overlay : document.getElementById("overlay"),
     loadingSpinner : document.getElementById('loading'),
-    profileSection : document.getElementById('profile-section')
+    profileSection : document.getElementById('profile-section'),
+    addNewCommentBtn : document.querySelectorAll('.new-comment-btn')
 };
 
 // ==================================================================================== eventlistener
@@ -99,6 +100,23 @@ DOMRefs.postsContainer?.addEventListener('click' ,(e)=>{
     }
 })
 
+document.addEventListener('click', (e) => {
+    const addCommentBtn  = e.target.closest('.new-comment-btn')
+    if (addCommentBtn) {
+        const postInfo = addCommentBtn.closest('.write-comment');
+        if(postInfo)
+        {
+            const postId =  postInfo.dataset.id;
+            // steps
+            // 1 - check if user logged in or not
+            // 2 - check the input field if empty return no else add the comment
+            // 3 - add the comment to the post 
+            // 4 - decide to show the comments or not
+            handelCommentBtn({postId: postId});
+        }
+    }
+});
+
 DOMRefs.overlay?.addEventListener("click", closeAllDropdowns);
 
 // functions
@@ -111,7 +129,7 @@ function setUpUI(){ //update the UI based on user is logged in or not
         DOMRefs.loggedInDiv.style.setProperty('display' , 'none' ,'important');
         DOMRefs.loggedOutDiv.style.setProperty('display' , 'flex' ,'important');
         DOMRefs.userNameSpan.textContent = userObj.username;
-        DOMRefs.userProfileImg.src = setDefaultImg({userImg: userObj.profile_image , defaultImage : './assets/images/500.png'});
+        DOMRefs.userProfileImg.src = setDefaultImg({defaultImage : './assets/images/500.png' , userImg:  userObj != null ? userObj.profile_image : null   });
         DOMRefs.profileSection.style.visibility = 'visible';
         if(DOMRefs.addPostBtn)
             DOMRefs.addPostBtn.classList.remove('d-none');
@@ -172,7 +190,9 @@ function hideModal({modalInstance}){
 
 function showCurrentUserProfile(){
     const currentUser = getCurrentUser() ;
-    window.location.href = `profilePage.html?userId=${currentUser.id}`;
+    currentUser != null ?
+        window.location.href = `profilePage.html?userId=${currentUser.id}`
+        : showAlert({message : 'User not found' , alertType: 'danger'});
 }
 
 function formValidation({formId , formFunction}){
@@ -202,14 +222,116 @@ function toggleLoadingSpinner(show=true){
 
 }
 //===================================================================================== post modal function handel 
-function setDefaultImg({userImg , defaultImage}){
-    return Object.keys(userImg).length === 0 ? defaultImage : userImg;
+function fillCommentContent({comment}){
+    const userCommentImg = setDefaultImg({ defaultImage : '/assets/images/500.png' , userImg: comment.author.profile_image });
+    let content = `
+                    <!-- other users comments -->
+                        <div class="p-2 d-flex align-items-start gap-2 comment" style="font-size: 1rem;">
+                            
+                            <!-- other user profile image -->
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="image-container">
+                                    <img    src="${userCommentImg}" 
+                                            alt="" >
+                                </span>
+                            </div>
+                            <!--# other user profile image #-->
+
+                            <!-- other user comment -->
+                            <div class="h-100" style="  width: 100%; 
+                                                        padding:10px; 
+                                                        background-color: var(--main-bg-primary-color); 
+                                                        color: var(--color-primary-text) ;
+                                                        border-radius: 10px;">
+                                <!-- username -->
+                                <p class="mb-2 fw-bold" style="color: var(--btn-bg-secondary-color);">@${comment.author.username}</p>
+                                <!-- comment body -->
+                                <p class="m-0 fw-light">${comment.body}</p>
+                            </div>
+                            <!--# other user comment #-->
+
+                        </div>
+                    <!--# other users comments #-->
+                    `;
+    return sanitizeHTMLContent(content) 
 }
 
-function insertNewPost({direction , post , currentUser , container , writeCommentHTML = null , commentsHTML = null }){
+function handelCommentBtn({postId , showComments = false}){
+    const currentUser = getCurrentUser();
+    if (currentUser == null){
+        showAlert({message : 'You have to log in first!' , alertType: 'danger'});
+    }
+    else{
+        const comment = document.getElementById(`currentUser-comment-${postId}`).value;
+        if (comment == '')
+            showAlert({message : 'Please enter a comment to send' , alertType: 'danger'})
+        else{
+            showComments = getWindowsParams({paramName: 'postId'}) ? true : false;
+            addNewComment({comment: comment , postId : postId ,showComments : showComments});
+        }
+            
+    }
+    hideAlert();
+}
+
+async function addNewComment({comment , postId , showComments}) {
+    const token = localStorage.getItem('token');
+    if(token){
+        toggleLoadingSpinner(show=true);
+        const raw = JSON.stringify({
+            body: comment,
+        });
+
+        const requestOptions = {
+            method: "POST",
+            body : raw , 
+            headers : {
+                'Authorization' : `Bearer ${token}`,
+                "Accept": "application/json" ,
+                "Content-Type": "application/json"
+            }
+        }
+
+        try{
+            const response = await fetch(`${baseUrl}/posts/${postId}/comments`, requestOptions);
+            const json = await response.json(); // get raw text first
+
+            if(json.data)
+            {
+                console.log(json)
+                if (showComments)
+                    document.getElementById(`users-comments-${postId}`).insertAdjacentHTML('afterbegin', fillCommentContent({comment: json.data}));
+                document.getElementById(`post-comments-number-${postId}`).innerText = Number(document.getElementById(`post-comments-number-${postId}`).innerText) + 1; // TODO : increase post numbers
+                showAlert({message:"Comment was add successfully" , alertType: 'success'});
+            }
+            else{
+                showAlert({message:json.message , alertType: 'danger'});
+            }
+        }
+        catch (error){
+            console.error(error.message);
+            showAlert({message: error.message , alertType: 'danger'});
+        }
+        finally{
+            toggleLoadingSpinner(show=false);
+        }
+    }
+    else{
+        showAlert({message: 'You have to login first.!' , alertType: 'danger'});
+    }
+    hideAlert();
+}
+
+function setDefaultImg({defaultImage , userImg= null}){
+    if (userImg != null) 
+        return Object.keys(userImg).length === 0 ? defaultImage : userImg;
+    return defaultImage ;
+}
+
+function insertNewPost({direction , post , currentUser , container , commentsHTML = null }){
     let dropDownMenuContent = ``;
     let tagsHtml = "";
-    let currentUserImg = setDefaultImg({userImg: currentUser.profile_image , defaultImage : '/assets/images/500.png'});
+    let currentUserImg = setDefaultImg({ defaultImage : '/assets/images/500.png' , userImg: currentUser != null ? currentUser.profile_image : null});
 
     for (let tag of post.tags)
         tagsHtml += `<span class = 'tag'>${tag.name}</span>`;
@@ -242,8 +364,37 @@ function insertNewPost({direction , post , currentUser , container , writeCommen
                                             </div>
                                         </div>
                                         `;
-    
-    let postAuthorImage = setDefaultImg({userImg : post.author.profile_image , defaultImage : '/assets/images/500.png'});
+    const writeCommentHTML = `  
+                            <!-- current User comment -->
+                                <div class = 'write-comment' data-id = ${post.id}>
+                                    <div class="p-2 d-flex align-items-center gap-2" style="font-size: 1rem;">
+                                        <div class="d-flex align-items-center">
+                                            <!-- current User img -->
+                                            <span class="image-container">
+                                                <img    src="${currentUserImg}" 
+                                                        alt="">
+                                            </span>
+                                            <!--# current user image #-->
+                                        </div>
+
+                                        <!-- current User Comment -->
+                                        <div class="new-comment d-flex position-relative w-100">
+                                            <input  type="text" id="currentUser-comment-${post.id}"
+                                                    name="logged-in-user-comment" placeholder="write a comment"
+                                                    class="logged-in-user-comment" style="width: 100%; padding:10px; color: var(--color-primary-text);">
+
+                                            <button class="position-absolute top-0 end-0 new-comment-btn">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <!--# current user Comment #-->
+                                    </div>
+                                </div>
+                            <!--# current User comment #-->
+                                `;
+    let postAuthorImage = setDefaultImg({defaultImage : '/assets/images/500.png' , userImg : post.author.profile_image });
     let content = `
                     <div class="d-flex justify-content-center" id = '${post.id}'>
                         <div class="card col-10 shadow post-card p-4" style="   background-color: var(--main-bg-secondary-color); 
@@ -281,7 +432,7 @@ function insertNewPost({direction , post , currentUser , container , writeCommen
                                         font-size: 40px;
                                         font-weight: 800;
                                         " id = 'post-title-${post.id}'>
-                                        ${post.title}
+                                        ${post.title ? post.title : ''}
                                     </p>
                                     <!--# post title #-->
 
@@ -293,7 +444,7 @@ function insertNewPost({direction , post , currentUser , container , writeCommen
 
                                     <!-- post image -->
                                     <div class="post-img">
-                                        <img  src="${setDefaultImg({userImg:post.image , defaultImage : '/assets/images/empty_post_img.jpg'})}" alt="">
+                                        <img  src="${setDefaultImg({ defaultImage : '/assets/images/empty_post_img.jpg' , userImg:post.image })}" alt="">
                                     </div>
                                     <!--# post image #-->
 
@@ -305,7 +456,7 @@ function insertNewPost({direction , post , currentUser , container , writeCommen
                                                     <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
                                                     <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2"/>
                                                 </svg>
-                                                <span class="badge rounded-pill position-absolute top-0 start-100 translate-middle post-comments-number">
+                                                <span class="badge rounded-pill position-absolute top-0 start-100 translate-middle post-comments-number" id = 'post-comments-number-${post.id}'>
                                                     ${post.comments_count}
                                                 </span>
                                             </span>
@@ -321,11 +472,11 @@ function insertNewPost({direction , post , currentUser , container , writeCommen
                                 </div>
                                 <!--# post info #-->
 
-                                ${  writeCommentHTML?
-                                    '<hr>'+ writeCommentHTML:
-                                    ''
-                                }
-                                <div id = 'users-comments'>
+                                <hr>
+
+                                ${  writeCommentHTML}
+
+                                <div class = 'users-comments' id = 'users-comments-${post.id}'>
                                     ${commentsHTML ?
                                         commentsHTML:
                                         ''
@@ -598,19 +749,20 @@ async function logOutUser(){
     const myHeaders = new Headers();
     myHeaders.append("Accept", "application/json");
     myHeaders.append("Content-Type", "application/json"); 
-
-    const raw = JSON.stringify({
-        username: userInfo.username,
-        password: userInfo.password
-    });
-
-    const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow"
-    };
     try{
+
+        const raw = JSON.stringify({
+            username: userInfo.username,
+            password: userInfo.password
+        });
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+    
         const response = await fetch(`${CONFIG.baseUrl}/logout`, requestOptions);
         const json = await response.json();
         

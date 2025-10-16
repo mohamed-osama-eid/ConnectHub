@@ -39,7 +39,7 @@ async function showUserProfileInfo() {
         let dropDownMenuContent = ``;
         // userPostsContainer.innerHTML = ``;
         const currentUser = await getCurrentUser();
-        const userImage = setDefaultImg({userImg: userInfo.profile_image , defaultImage : '/assets/images/500.png'})
+        const userImage = setDefaultImg({ defaultImage : '/assets/images/500.png' , userImg: userInfo.profile_image })
         userCardBodyInfo.innerHTML = `
                                         <div class="card-body">
                                             <!-- post number , image , comments numbers  -->
